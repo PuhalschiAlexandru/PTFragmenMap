@@ -18,8 +18,7 @@ import butterknife.BindView;
  */
 
 public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
-    @BindView(R.id.fms_f_map_fragment)
-    SupportMapFragment mMapFragment;
+    private  SupportMapFragment mMapFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,6 +28,7 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mMapFragment = (SupportMapFragment)getFragmentManager().findFragmentById(R.id.fms_f_map_fragment);
         mMapFragment.getMapAsync(this);
     }
 

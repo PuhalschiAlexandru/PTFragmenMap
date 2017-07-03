@@ -1,5 +1,6 @@
 package com.tapptitude.fragmentmapapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -32,5 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onAddClicked() {
         // TODO: 30/06/2017 Implement
+        Intent intent = new Intent(MainActivity.this,MapActivity.class);
+        startActivity(intent);
     }
 }
