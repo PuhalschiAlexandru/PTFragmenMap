@@ -1,5 +1,6 @@
 package com.tapptitude.fragmentmapapp;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 /**
@@ -26,9 +26,12 @@ import butterknife.OnClick;
 public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
     private static double MAP_START_LONGITUDE = 46.7667;
     private static double MAP_START_LATITUDE = 23.6;
-    private GoogleMap mGoogleMap;
     @BindView(R.id.fms_fab_add_button)
     FloatingActionButton mFloatingActionButton;
+
+    private GoogleMap mGoogleMap;
+    private boolean mIsFABHidden;
+    private Animator.AnimatorListener mFABAnimationListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,9 +41,9 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fms_f_map_fragment);
-        mMapFragment.getMapAsync(FragmentMapScreen.this);
-        ButterKnife.bind(view);
+        ButterKnife.bind(this, view);
+        initializeAnimationListener();
+        initializeMapFragment();
     }
 
     @Override
@@ -52,19 +55,72 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
         initializeOnCameraMoveListener();
     }
 
+    private void initializeMapFragment() {
+        SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fms_f_map_fragment);
+        mMapFragment.getMapAsync(this);
+    }
+
+    private void initializeAnimationListener() {
+        mFABAnimationListener = new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                if (mFloatingActionButton.getTranslationY() != 0) {
+                    mFloatingActionButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if (mFloatingActionButton.getTranslationY() != 0) {
+                    mFloatingActionButton.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        };
+    }
+
     private void initializeOnCameraMoveListener() {
         mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+
             @Override
             public void onCameraMove() {
+                if (!mIsFABHidden) {
+                    showFAB();
+                    mIsFABHidden = true;
+                }
                 // mCenterCamera = mGoogleMap.getCameraPosition().target;
+            }
+        });
+
+        mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                hideFAB();
+                mIsFABHidden = false;
             }
         });
     }
 
-    @OnClick(R.id.fms_fab_add_button)
-    private void floatingButtonClicked() {
-
+    private void showFAB() {
+        mFloatingActionButton.animate()
+                .translationY(mFloatingActionButton.getHeight())
+                .alpha(0)
+                .setListener(mFABAnimationListener);
     }
 
-
+    private void hideFAB() {
+        mFloatingActionButton.animate()
+                .translationY(0)
+                .alpha(1.0f)
+                .setListener(mFABAnimationListener);
+    }
 }
