@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -26,6 +27,7 @@ import butterknife.ButterKnife;
 public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
     private static double MAP_START_LONGITUDE = 46.7667;
     private static double MAP_START_LATITUDE = 23.6;
+
     @BindView(R.id.fms_fab_add_button)
     FloatingActionButton mFloatingActionButton;
 
@@ -122,5 +124,10 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
                 .translationY(0)
                 .alpha(1.0f)
                 .setListener(mFABAnimationListener);
+    }
+
+    @OnClick(R.id.fms_fab_add_button)
+    public void onFABClicked() {
+
     }
 }
