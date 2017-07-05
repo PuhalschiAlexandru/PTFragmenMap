@@ -1,5 +1,6 @@
 package com.tapptitude.fragmentmapapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import Helper.CoordinateItemHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,12 +25,16 @@ public class FragmentCoordinatesScreen extends Fragment {
     @BindView(R.id.fcs_rv_list)
     RecyclerView mRecyclerView;
     private CoordinatesListAdapter mCoordinatesAdapter;
+    private CoordinateScreenItemListener mCoordinateScreenItemListener;
+
 
     private List<CoordinatesListItem> mCoordinatesListItemsList;
+    private CoordinateItemHelper mCoordinateItemHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCoordinateItemHelper = new CoordinateItemHelper(getActivity());
     }
 
     @Override
@@ -43,11 +49,30 @@ public class FragmentCoordinatesScreen extends Fragment {
         initRecyclerView();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof CoordinateScreenItemListener) {
+            mCoordinateScreenItemListener = (CoordinateScreenItemListener) context;
+        } else {
+            throw new RuntimeException(context.toString());
+        }
+    }
+
     private void initRecyclerView() {
         mCoordinatesListItemsList = new ArrayList<>();
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-//        mCoordinatesAdapter = new CoordinatesListAdapter(testData());
+        mCoordinatesAdapter = new CoordinatesListAdapter(mCoordinateItemHelper.getCoordinatesItems());
         mRecyclerView.setAdapter(mCoordinatesAdapter);
+    }
+
+    public void onNewCoordinatesItemAdded(CoordinatesListItem coordinatesListItem) {
+        mCoordinateItemHelper.storeCoordinateItem(coordinatesListItem);
+        mCoordinatesAdapter.addCoordinateItem(coordinatesListItem);
+    }
+
+    public interface CoordinateScreenItemListener {
+        void onCoordinateScreenItemSelected(CoordinatesListItem coordinatesListItem);
     }
 }

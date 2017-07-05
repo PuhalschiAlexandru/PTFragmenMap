@@ -1,5 +1,6 @@
 package com.tapptitude.fragmentmapapp;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
+import Helper.CoordinateItemHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,7 +21,6 @@ import butterknife.ButterKnife;
 
 public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesListAdapter.ViewHolder> {
     private List<CoordinatesListItem> mCoordinateListItems;
-
 
     public CoordinatesListAdapter(List<CoordinatesListItem> mCoordinateListItems) {
         this.mCoordinateListItems = mCoordinateListItems;
@@ -33,13 +35,22 @@ public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesList
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTitleTV.setText(mCoordinateListItems.get(position).getTitle());
-        holder.mCoordinates.setText(String.valueOf(mCoordinateListItems.get(position).getCoordinates()));
+        CoordinatesListItem current = mCoordinateListItems.get(position);
+        holder.mTitleTV.setText(current.getTitle());
+        holder.mCoordinates.setText(String.valueOf(current.getCoordinates()));
     }
 
     @Override
     public int getItemCount() {
-        return mCoordinateListItems.size();
+        return mCoordinateListItems == null ? 0 : mCoordinateListItems.size();
+    }
+
+    public void addCoordinateItem(CoordinatesListItem coordinatesListItem) {
+        if (mCoordinateListItems == null) {
+            mCoordinateListItems = new ArrayList<>();
+        }
+        mCoordinateListItems.add(0, coordinatesListItem);
+        notifyItemInserted(0);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

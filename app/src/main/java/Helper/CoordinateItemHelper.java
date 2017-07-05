@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tapptitude.fragmentmapapp.CoordinatesListItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,10 +17,8 @@ import java.util.List;
 public class CoordinateItemHelper {
     private static String APPLICATION_PREFERENCES = "APPLICATION_PREFERENCES";
     private static String COORDINATES_KEY = "COORDINATES_KEY";
-    private List<CoordinatesListItem> mCoordinatesListItems;
     private Context mContext;
     private Gson mGson;
-    private SharedPreferences mSharedPreferences;
 
 
     public CoordinateItemHelper(Context context) {
@@ -27,19 +26,23 @@ public class CoordinateItemHelper {
         mContext = context;
     }
 
-    public CoordinatesListItem getCoorinatesItem(int position) {
+    public List<CoordinatesListItem> getCoordinatesItems() {
         String json = "";
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE);
-        sharedPreferences.getString(COORDINATES_KEY, json);
-        mCoordinatesListItems = mGson.fromJson(json, new TypeToken<List<CoordinatesListItem>>() {
+        json = sharedPreferences.getString(COORDINATES_KEY, "");
+        List<CoordinatesListItem> coordinatesList = mGson.fromJson(json, new TypeToken<List<CoordinatesListItem>>() {
         }.getType());
-        return mCoordinatesListItems.get(position);
+        return coordinatesList == null ? new ArrayList<CoordinatesListItem>() : coordinatesList;
+    }
+
+    public CoordinatesListItem getCoordinatesItem(int position) {
+        return getCoordinatesItems().get(position);
     }
 
     public void storeCoordinateItem(CoordinatesListItem coordinatesListItem) {
-        mCoordinatesListItems.add(coordinatesListItem);
-        String json = mGson.toJson(mCoordinatesListItems);
-
+        List<CoordinatesListItem> coordinatesList = getCoordinatesItems();
+        coordinatesList.add(coordinatesListItem);
+        String json = mGson.toJson(coordinatesList);
         SharedPreferences.Editor preferenceEditor = mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE).edit();
         preferenceEditor.putString(COORDINATES_KEY, json);
         preferenceEditor.apply();

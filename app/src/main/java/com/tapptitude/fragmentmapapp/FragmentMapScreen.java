@@ -1,6 +1,7 @@
 package com.tapptitude.fragmentmapapp;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,10 +34,20 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
 
     @BindView(R.id.fms_fab_add_button)
     FloatingActionButton mFloatingActionButton;
-
     private GoogleMap mGoogleMap;
     private boolean mIsFABHidden;
     private Animator.AnimatorListener mFABAnimationListener;
+    private OnCoordinatesListItemListener mCoordinateListItemListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCoordinatesListItemListener) {
+            mCoordinateListItemListener = (OnCoordinatesListItemListener) context;
+        } else {
+            throw new RuntimeException(context.toString());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,7 +113,6 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
                     showFAB();
                     mIsFABHidden = true;
                 }
-                // mCenterCamera = mGoogleMap.getCameraPosition().target;
             }
         });
 
@@ -126,8 +139,19 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
                 .setListener(mFABAnimationListener);
     }
 
+    public interface OnCoordinatesListItemListener {
+        void onFABAddButtonClicked(CoordinatesListItem coordinatesListItem);
+    }
+
+    private String getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+        return dateFormat.format(calendar.getTime());
+    }
+
     @OnClick(R.id.fms_fab_add_button)
     public void onFABClicked() {
-
+        CoordinatesListItem item = new CoordinatesListItem(getCurrentDate(), mGoogleMap.getCameraPosition().target);
+        mCoordinateListItemListener.onFABAddButtonClicked(item);
     }
 }
