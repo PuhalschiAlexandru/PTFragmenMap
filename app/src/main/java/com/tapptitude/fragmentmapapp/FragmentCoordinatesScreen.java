@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Helper.CoordinateItemHelper;
+import Helper.CoordinatesItemTouchHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,6 +49,7 @@ public class FragmentCoordinatesScreen extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         initRecyclerView();
+        initItemTouchHelper();
     }
 
     @Override
@@ -67,10 +70,28 @@ public class FragmentCoordinatesScreen extends Fragment {
         mRecyclerView.setAdapter(mCoordinatesAdapter);
     }
 
+    private void initItemTouchHelper() {
+        ItemTouchHelper.Callback itemTouchHelperCallBack = new CoordinatesItemTouchHelper(mCoordinatesAdapter,
+                new CoordinatesItemTouchHelper.ItemTouchHelperListener() {
+                    @Override
+                    public void onItemRemoved(int position) {
+                        mCoordinateItemHelper.deleteCoordinateItem(position);
+                    }
+
+                    @Override
+                    public void onItemSwapped(int oldPosition, int newPosition) {
+                        mCoordinateItemHelper.swapCoordinateItem(oldPosition, newPosition);
+                    }
+                });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallBack);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
     public void onNewCoordinatesItemAdded(CoordinatesListItem coordinatesListItem) {
         mCoordinateItemHelper.storeCoordinateItem(coordinatesListItem);
         mCoordinatesAdapter.addCoordinateItem(coordinatesListItem);
     }
+
 
     public interface CoordinateScreenItemListener {
         void onCoordinateScreenItemSelected(CoordinatesListItem coordinatesListItem);

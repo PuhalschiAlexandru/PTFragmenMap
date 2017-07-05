@@ -15,7 +15,7 @@
             style="@style/list_text_view_style"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:padding="10dp"
+            android:padding="5dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             tools:text="Test Text sdsadfdsdfsdfsdfsfsdfsdfs" />
@@ -25,9 +25,9 @@
             style="@style/list_text_view_style"
             android:layout_below="@+id/im_tv_title"
             android:layout_margin="5dp"
-            android:padding="10dp"
+            android:padding="5dp"
             android:textColor="@android:color/black"
-            android:textSize="12sp"
+            android:textSize="14sp"
             tools:text="127.1.0.0 255.255.255.255" />
 
     </RelativeLayout>

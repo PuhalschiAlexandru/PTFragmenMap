@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import Helper.CoordinateItemHelper;
 
 public class MainActivity extends AppCompatActivity implements FragmentCoordinatesScreen.CoordinateScreenItemListener {
     private static final int REQUEST_CODE = 1;

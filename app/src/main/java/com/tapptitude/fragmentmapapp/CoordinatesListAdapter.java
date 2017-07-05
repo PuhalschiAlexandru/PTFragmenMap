@@ -1,6 +1,5 @@
 package com.tapptitude.fragmentmapapp;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,9 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import Helper.CoordinateItemHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -22,6 +21,7 @@ import butterknife.ButterKnife;
 public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesListAdapter.ViewHolder> {
     private List<CoordinatesListItem> mCoordinateListItems;
 
+
     public CoordinatesListAdapter(List<CoordinatesListItem> mCoordinateListItems) {
         this.mCoordinateListItems = mCoordinateListItems;
     }
@@ -29,8 +29,7 @@ public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesList
     @Override
     public CoordinatesListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_map, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -64,5 +63,13 @@ public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesList
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+    public void onItemMoved(int oldPosition,int newPosition){
+        Collections.swap(mCoordinateListItems,oldPosition,newPosition);
+        notifyItemMoved(oldPosition,newPosition);
+    }
+    public void onItemDeleted(int position){
+        mCoordinateListItems.remove(position);
+        notifyItemRemoved(position);
     }
 }
