@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCoordinat
             if (resultCode == RESULT_OK) {
                 CoordinatesListItem coordinatesListItem = data.getParcelableExtra(COORDINATES_ITEM_TAG);
 
-                if(mCoordinatesFragment != null) {
+                if (mCoordinatesFragment != null) {
                     mCoordinatesFragment.onNewCoordinatesItemAdded(coordinatesListItem);
                 }
             }
@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCoordinat
 
     @Override
     public void onCoordinateScreenItemSelected(CoordinatesListItem coordinatesListItem) {
-        // TODO: 05/07/2017 Implement details display
+        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        intent.putExtra(COORDINATES_ITEM_TAG, coordinatesListItem);
+        startActivity(intent);
     }
 }

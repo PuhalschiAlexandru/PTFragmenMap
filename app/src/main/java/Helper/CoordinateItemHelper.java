@@ -28,7 +28,7 @@ public class CoordinateItemHelper {
     }
 
     public List<CoordinatesListItem> getCoordinatesItems() {
-        String json = "";
+        String json;
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE);
         json = sharedPreferences.getString(COORDINATES_KEY, "");
         List<CoordinatesListItem> coordinatesList = mGson.fromJson(json, new TypeToken<List<CoordinatesListItem>>() {

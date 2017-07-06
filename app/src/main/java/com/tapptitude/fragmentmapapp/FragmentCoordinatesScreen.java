@@ -12,9 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import Helper.CoordinateItemHelper;
 import Helper.CoordinatesItemTouchHelper;
 import butterknife.BindView;
@@ -24,13 +21,12 @@ import butterknife.ButterKnife;
  * Created by alexpuhalschi on 29/06/2017.
  */
 
-public class FragmentCoordinatesScreen extends Fragment {
+public class FragmentCoordinatesScreen extends Fragment implements CoordinatesListAdapter.CoordinateItemClickListener {
     @BindView(R.id.fcs_rv_list)
     RecyclerView mRecyclerView;
     private CoordinatesListAdapter mCoordinatesAdapter;
     private CoordinateScreenItemListener mCoordinateScreenItemListener;
 
-    private List<CoordinatesListItem> mCoordinatesListItemsList;
     private CoordinateItemHelper mCoordinateItemHelper;
 
     @Override
@@ -63,10 +59,9 @@ public class FragmentCoordinatesScreen extends Fragment {
     }
 
     private void initRecyclerView() {
-        mCoordinatesListItemsList = new ArrayList<>();
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mCoordinatesAdapter = new CoordinatesListAdapter(mCoordinateItemHelper.getCoordinatesItems());
+        mCoordinatesAdapter = new CoordinatesListAdapter(mCoordinateItemHelper.getCoordinatesItems(), this);
         mRecyclerView.setAdapter(mCoordinatesAdapter);
     }
 
@@ -113,6 +108,13 @@ public class FragmentCoordinatesScreen extends Fragment {
                 }
             }
         }).show();
+    }
+
+    @Override
+    public void onCoordinateItemClicked(int position) {
+        if (mCoordinateScreenItemListener != null) {
+            mCoordinateScreenItemListener.onCoordinateScreenItemSelected(mCoordinateItemHelper.getCoordinatesItem(position));
+        }
     }
 
     public interface CoordinateScreenItemListener {

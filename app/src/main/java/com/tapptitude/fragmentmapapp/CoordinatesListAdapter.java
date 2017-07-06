@@ -20,10 +20,11 @@ import butterknife.ButterKnife;
 
 public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesListAdapter.ViewHolder> {
     private List<CoordinatesListItem> mCoordinateListItems;
+    private CoordinateItemClickListener mCoordinateItemClickListener;
 
-
-    public CoordinatesListAdapter(List<CoordinatesListItem> mCoordinateListItems) {
+    public CoordinatesListAdapter(List<CoordinatesListItem> mCoordinateListItems, CoordinateItemClickListener mCoordinateItemClickListener) {
         this.mCoordinateListItems = mCoordinateListItems;
+        this.mCoordinateItemClickListener = mCoordinateItemClickListener;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesList
         notifyItemInserted(0);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.im_tv_title)
         TextView mTitleTV;
 
@@ -62,6 +63,14 @@ public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesList
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mCoordinateItemClickListener != null) {
+                mCoordinateItemClickListener.onCoordinateItemClicked(ViewHolder.this.getAdapterPosition());
+            }
         }
     }
 
@@ -78,5 +87,9 @@ public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesList
     public void undoDelete(int position, CoordinatesListItem coordinatesListItem) {
         mCoordinateListItems.add(position, coordinatesListItem);
         notifyItemInserted(position);
+    }
+
+    public interface CoordinateItemClickListener {
+        void onCoordinateItemClicked(int position);
     }
 }

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,13 +33,15 @@ import butterknife.OnClick;
 public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
     private static double MAP_START_LONGITUDE = 46.7667;
     private static double MAP_START_LATITUDE = 23.6;
-
+    @BindView(R.id.fms_tv_coordinates_text)
+    TextView mTextView;
     @BindView(R.id.fms_fab_add_button)
     FloatingActionButton mFloatingActionButton;
     private GoogleMap mGoogleMap;
     private boolean mIsFABHidden;
     private Animator.AnimatorListener mFABAnimationListener;
     private OnCoordinatesListItemListener mCoordinateListItemListener;
+    private CoordinatesListItem mCoordinateListItem;
 
     @Override
     public void onAttach(Context context) {
@@ -65,15 +69,23 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(MAP_START_LONGITUDE, MAP_START_LATITUDE)).zoom(15).build();
-        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        initializeOnCameraMoveListener();
+        if (mCoordinateListItem != null) {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(mCoordinateListItem.getCoordinates()).zoom(15).build();
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+            mTextView.setText(String.valueOf(mCoordinateListItem.getTitle()));
+        } else {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(MAP_START_LONGITUDE, MAP_START_LATITUDE)).zoom(15).build();
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            initializeOnCameraMoveListener();
+        }
     }
 
     private void initializeMapFragment() {
-        SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fms_f_map_fragment);
-        mMapFragment.getMapAsync(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fms_f_map_fragment);
+        mapFragment.getMapAsync(this);
     }
 
     private void initializeAnimationListener() {
@@ -153,5 +165,10 @@ public class FragmentMapScreen extends Fragment implements OnMapReadyCallback {
     public void onFABClicked() {
         CoordinatesListItem item = new CoordinatesListItem(getCurrentDate(), mGoogleMap.getCameraPosition().target);
         mCoordinateListItemListener.onFABAddButtonClicked(item);
+    }
+
+    public void showCoordinatesDetails(CoordinatesListItem coordinatesListItem) {
+        mCoordinateListItem = coordinatesListItem;
+        mFloatingActionButton.setVisibility(View.GONE);
     }
 }
