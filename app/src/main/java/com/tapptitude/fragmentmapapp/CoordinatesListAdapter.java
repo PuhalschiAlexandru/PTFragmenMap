@@ -64,12 +64,19 @@ public class CoordinatesListAdapter extends RecyclerView.Adapter<CoordinatesList
             ButterKnife.bind(this, itemView);
         }
     }
-    public void onItemMoved(int oldPosition,int newPosition){
-        Collections.swap(mCoordinateListItems,oldPosition,newPosition);
-        notifyItemMoved(oldPosition,newPosition);
+
+    public void onItemMoved(int oldPosition, int newPosition) {
+        Collections.swap(mCoordinateListItems, oldPosition, newPosition);
+        notifyItemMoved(oldPosition, newPosition);
     }
-    public void onItemDeleted(int position){
+
+    public void onItemDeleted(int position) {
         mCoordinateListItems.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void undoDelete(int position, CoordinatesListItem coordinatesListItem) {
+        mCoordinateListItems.add(position, coordinatesListItem);
+        notifyItemInserted(position);
     }
 }

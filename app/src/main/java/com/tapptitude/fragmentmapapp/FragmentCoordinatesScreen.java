@@ -3,6 +3,7 @@ package com.tapptitude.fragmentmapapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +29,6 @@ public class FragmentCoordinatesScreen extends Fragment {
     RecyclerView mRecyclerView;
     private CoordinatesListAdapter mCoordinatesAdapter;
     private CoordinateScreenItemListener mCoordinateScreenItemListener;
-
 
     private List<CoordinatesListItem> mCoordinatesListItemsList;
     private CoordinateItemHelper mCoordinateItemHelper;
@@ -74,8 +74,8 @@ public class FragmentCoordinatesScreen extends Fragment {
         ItemTouchHelper.Callback itemTouchHelperCallBack = new CoordinatesItemTouchHelper(mCoordinatesAdapter,
                 new CoordinatesItemTouchHelper.ItemTouchHelperListener() {
                     @Override
-                    public void onItemRemoved(int position) {
-                        mCoordinateItemHelper.deleteCoordinateItem(position);
+                    public void onItemRemoved(final int position) {
+                        showUndoSnackBar(position);
                     }
 
                     @Override
@@ -92,6 +92,28 @@ public class FragmentCoordinatesScreen extends Fragment {
         mCoordinatesAdapter.addCoordinateItem(coordinatesListItem);
     }
 
+    private void showUndoSnackBar(final int position) {
+        Snackbar.make(mRecyclerView, R.string.undo_snack_bar_message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                }).addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                switch (event) {
+                    case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                        mCoordinatesAdapter.undoDelete(position, mCoordinateItemHelper.getCoordinatesItem(position));
+                        break;
+                    default:
+                        mCoordinateItemHelper.deleteCoordinateItem(position);
+                        break;
+                }
+            }
+        }).show();
+    }
 
     public interface CoordinateScreenItemListener {
         void onCoordinateScreenItemSelected(CoordinatesListItem coordinatesListItem);

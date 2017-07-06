@@ -25,7 +25,9 @@
             style="@style/list_text_view_style"
             android:layout_below="@+id/im_tv_title"
             android:layout_margin="5dp"
+            android:ellipsize="end"
             android:padding="5dp"
+            android:singleLine="true"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             tools:text="127.1.0.0 255.255.255.255" />
