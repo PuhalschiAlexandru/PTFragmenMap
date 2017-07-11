@@ -1,9 +1,9 @@
-package Helper;
+package com.tapptitude.fragmentmapapp.helper;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.tapptitude.fragmentmapapp.CoordinatesListAdapter;
+import com.tapptitude.fragmentmapapp.ui.adapter.CoordinatesListAdapter;
 
 /**
  * Created by alexpuhalschi on 05/07/2017.
@@ -13,7 +13,8 @@ public class CoordinatesItemTouchHelper extends ItemTouchHelper.Callback {
     private CoordinatesListAdapter mCoordinateAdapter;
     private ItemTouchHelperListener mListener;
 
-    public CoordinatesItemTouchHelper(CoordinatesListAdapter mCoordinateAdapter, ItemTouchHelperListener mListener) {
+    public CoordinatesItemTouchHelper(CoordinatesListAdapter mCoordinateAdapter,
+                                      ItemTouchHelperListener mListener) {
         this.mCoordinateAdapter = mCoordinateAdapter;
         this.mListener = mListener;
     }
@@ -26,7 +27,8 @@ public class CoordinatesItemTouchHelper extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                          RecyclerView.ViewHolder target) {
         int oldPos = viewHolder.getAdapterPosition();
         int newPos = target.getAdapterPosition();
         if (mListener != null) {

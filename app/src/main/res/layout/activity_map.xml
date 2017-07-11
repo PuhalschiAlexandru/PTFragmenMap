@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tapptitude.fragmentmapapp.MapActivity">
+    tools:context="com.tapptitude.fragmentmapapp.ui.activity.MapActivity">
 
     <fragment
-        android:name="com.tapptitude.fragmentmapapp.FragmentMapScreen"
+        android:name="com.tapptitude.fragmentmapapp.ui.fragment.MapScreenFragment"
         android:id="@+id/am_f_main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

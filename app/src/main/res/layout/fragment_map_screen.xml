@@ -21,6 +21,7 @@
         tools:text="124.24.24.24.24" />
 
     <ImageView
+        android:id="@+id/fms_iv_marker"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_gravity="center"
@@ -35,5 +36,5 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="30dp"
         android:src="@drawable/ic_action_add"
-        app:backgroundTint="@color/Light_blue" />
+        app:backgroundTint="@color/light_blue" />
 </FrameLayout>

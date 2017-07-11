@@ -1,4 +1,4 @@
-package com.tapptitude.fragmentmapapp;
+package com.tapptitude.fragmentmapapp.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

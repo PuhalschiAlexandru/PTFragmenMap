@@ -4,11 +4,11 @@
     android:id="@+id/am_fl_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tapptitude.fragmentmapapp.MainActivity">
+    tools:context="com.tapptitude.fragmentmapapp.ui.activity.MainActivity">
 
     <fragment
         android:id="@+id/am_f_screen_fragment"
-        android:name="com.tapptitude.fragmentmapapp.FragmentCoordinatesScreen"
+        android:name="com.tapptitude.fragmentmapapp.ui.fragment.CoordinatesScreenFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_coordinates_screen" />

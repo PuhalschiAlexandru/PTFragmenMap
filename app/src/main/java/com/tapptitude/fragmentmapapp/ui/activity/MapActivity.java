@@ -1,4 +1,4 @@
-package com.tapptitude.fragmentmapapp;
+package com.tapptitude.fragmentmapapp.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-public class MapActivity extends AppCompatActivity implements FragmentMapScreen.OnCoordinatesListItemListener {
+import com.tapptitude.fragmentmapapp.model.CoordinatesListItem;
+import com.tapptitude.fragmentmapapp.ui.fragment.MapScreenFragment;
+import com.tapptitude.fragmentmapapp.R;
+
+public class MapActivity extends AppCompatActivity implements
+        MapScreenFragment.OnCoordinatesListItemListener {
     private static final String COORDINATES_ITEM_TAG = "COORDINATES_ITEM_TAG";
 
     @Override
@@ -30,15 +35,16 @@ public class MapActivity extends AppCompatActivity implements FragmentMapScreen.
 
     private void initializeMapShow() {
         Intent intent = this.getIntent();
-        if (intent.hasExtra(COORDINATES_ITEM_TAG)) {
-            CoordinatesListItem coordinatesListItem = intent.getParcelableExtra(COORDINATES_ITEM_TAG);
-            FragmentMapScreen fragmentMapScreen = (FragmentMapScreen) getSupportFragmentManager().findFragmentById(R.id.am_f_main_fragment);
-            fragmentMapScreen.showCoordinatesDetails(coordinatesListItem);
+        CoordinatesListItem coordinatesListItem = intent.getParcelableExtra(COORDINATES_ITEM_TAG);
+
+        if (coordinatesListItem != null) {
+            MapScreenFragment mapScreenFragment = (MapScreenFragment) getSupportFragmentManager().findFragmentById(R.id.am_f_main_fragment);
+            mapScreenFragment.showCoordinatesDetails(coordinatesListItem);
         }
     }
 
     @Override
-    public void onFABAddButtonClicked(CoordinatesListItem coordinatesListItem) {
+    public void onAddButtonClicked(CoordinatesListItem coordinatesListItem) {
         Intent intent = new Intent();
         intent.putExtra(COORDINATES_ITEM_TAG, coordinatesListItem);
         setResult(Activity.RESULT_OK, intent);

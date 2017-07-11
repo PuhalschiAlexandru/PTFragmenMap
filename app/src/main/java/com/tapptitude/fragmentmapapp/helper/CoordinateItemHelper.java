@@ -1,11 +1,11 @@
-package Helper;
+package com.tapptitude.fragmentmapapp.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.tapptitude.fragmentmapapp.CoordinatesListItem;
+import com.tapptitude.fragmentmapapp.model.CoordinatesListItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,10 +29,12 @@ public class CoordinateItemHelper {
 
     public List<CoordinatesListItem> getCoordinatesItems() {
         String json;
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(APPLICATION_PREFERENCES,
+                Context.MODE_PRIVATE);
         json = sharedPreferences.getString(COORDINATES_KEY, "");
-        List<CoordinatesListItem> coordinatesList = mGson.fromJson(json, new TypeToken<List<CoordinatesListItem>>() {
-        }.getType());
+        List<CoordinatesListItem> coordinatesList = mGson.fromJson(json,
+                new TypeToken<List<CoordinatesListItem>>() {
+                }.getType());
         return coordinatesList == null ? new ArrayList<CoordinatesListItem>() : coordinatesList;
     }
 
@@ -44,7 +46,7 @@ public class CoordinateItemHelper {
         List<CoordinatesListItem> coordinatesList = getCoordinatesItems();
         coordinatesList.add(coordinatesListItem);
         String json = mGson.toJson(coordinatesList);
-        SharedPreferences.Editor preferenceEditor = mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor preferenceEditor = getSharedPreferences();
         preferenceEditor.putString(COORDINATES_KEY, json);
         preferenceEditor.apply();
     }
@@ -53,7 +55,7 @@ public class CoordinateItemHelper {
         List<CoordinatesListItem> coordinatesList = getCoordinatesItems();
         coordinatesList.remove(position);
         String json = mGson.toJson(coordinatesList);
-        SharedPreferences.Editor preferenceEditor = mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor preferenceEditor = getSharedPreferences();
         preferenceEditor.putString(COORDINATES_KEY, json);
         preferenceEditor.apply();
     }
@@ -62,8 +64,23 @@ public class CoordinateItemHelper {
         List<CoordinatesListItem> coordinatesList = getCoordinatesItems();
         Collections.swap(coordinatesList, oldPosition, newPosition);
         String json = mGson.toJson(coordinatesList);
-        SharedPreferences.Editor preferenceEditor = mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor preferenceEditor = getSharedPreferences();
         preferenceEditor.putString(COORDINATES_KEY, json);
         preferenceEditor.apply();
+    }
+
+    public int getCoordinatesListItemsSize() {
+        String json;
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(APPLICATION_PREFERENCES,
+                Context.MODE_PRIVATE);
+        json = sharedPreferences.getString(COORDINATES_KEY, "");
+        List<CoordinatesListItem> coordinatesList = mGson.fromJson(json,
+                new TypeToken<List<CoordinatesListItem>>() {
+                }.getType());
+        return coordinatesList.size();
+    }
+
+    private SharedPreferences.Editor getSharedPreferences() {
+        return mContext.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE).edit();
     }
 }
